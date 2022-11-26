@@ -51,3 +51,57 @@ public class RandomPointer {
         }
     }
 }
+
+
+/*
+ * Approach 2 - Without HashMap
+ * 1 - The idea is to traverse the original list and create a new node for each node in the list. (create a deep copy)
+ * 2 - Connect the random pointers in the deep copy list
+ * 3 - Separate the original and deep copy list
+ */
+
+public Node copyRandomList(Node head) {
+    if(head == null)
+    {
+        return head;
+    }
+    
+    Node curr = head;
+    
+    //create a deep copy
+    while(curr != null)
+    {
+        Node newNode = new Node(curr.val);
+        newNode.next = curr.next;
+        curr.next = newNode;
+        curr = curr.next.next;
+    }
+    
+    //create random pointers for deep copy nodes
+    curr = head;
+    while(curr != null)
+    {
+        if(curr.random != null)
+        {
+            curr.next.random = curr.random.next;
+        }
+            curr = curr.next.next;
+    }
+    
+    //separate the two lists
+    curr = head;
+    Node headDeep = curr.next;
+    Node copyHead = headDeep;
+    
+    while(curr != null)
+    {
+        curr.next = headDeep.next;
+        if(headDeep.next != null)
+        {
+            headDeep.next = headDeep.next.next;
+        }
+        curr = curr.next;
+        headDeep = headDeep.next;
+    }
+    return copyHead;
+}
